@@ -1,36 +1,52 @@
 from flask import Flask, render_template, request,redirect
+from flaskwebgui import FlaskUI
 from flask_sqlalchemy import SQLAlchemy
-import webbrowser
-from threading import Timer
+#import webbrowser
+#from threading import Timer
 
 app = Flask(__name__)
-
+#ui=FlaskUI(app)
 import datetime
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///read.db'
 db = SQLAlchemy(app)
 
 class Task(db.Model):
+
     id = db.Column(db.Integer, primary_key = True)
-    task = db.Column(db.String(), nullable=False)
-    time = db.Column( db.String(), nullable = False, default = "30.2155")
+    task = db.Column(db.String(), nullable=False,default="")
+    time1 = db.Column( db.String(), nullable = False)
+    time2 = db.Column( db.String(), nullable = False)
+    status = db.Column( db.String(), nullable=False, default="uncompleted")
 
     def __repr__(self):
-        return f"id:{self.id}, task:{self.task},time:{self.time}"
+        return("Hello")
 
 @app.route('/',methods = ['POST','GET'])
 def index():
     if request.method == 'POST':
         new_task1 = request.form.get('task')
-        time = request.form.get('time')
-        try:
-            t =Task(task=new_task1, time = time )              
-            db.session.add(t)
-            db.session.commit()
-        except:
-            return "There was a problem"
-        return redirect('/')
-    tasks = Task.query.all()
+        time1 = request.form.get('time1')
+        time2 = request.form.get('time2')
+        tasks = Task.query.order_by(Task.time1).all()
+        flag = 0
+        if new_task1!="" and time1!="" and time2!="":
+            for task in tasks:
+                if time1==task.time1 and time2==task.time2:
+                    flag = 1
+        else:
+            print("Enter all the parameters")
+        if flag == 0:
+            try:
+                t =Task(task=new_task1, time1 = time1,time2= time2 )              
+                db.session.add(t)
+                db.session.commit()
+            except:
+                return "There was a problem"
+            return redirect('/')
+
+
+    tasks = Task.query.order_by(Task.time1).all()
     return render_template('index.html', tasks = tasks)
 
 @app.route('/delete/<int:id>')
@@ -43,19 +59,38 @@ def delete(id):
 @app.route('/update/<int:id>', methods = ['POST','GET'])
 def update(id):
     taask = Task.query.get_or_404(id)    
+    tasks = Task.query.order_by(Task.time1).all()
     if request.method == 'POST':
         taask.task = request.form['task']
-        try:
-            db.session.commit()
-            return redirect('/')  
-        except:
-            return "there was a problem" 
+        taask.time1 = request.form['time1']
+        taask.time2= request.form['time2']
+        for task in tasks:
+            if taask.time1!=task.time1 and taask.time2!=task.time2:
+                try:
+                    db.session.commit()
+                    return redirect('/')  
+                except:
+                    return "there was a problem" 
+            else:
+                return redirect('/')  
     else:
         return render_template('update.html',task=taask)
+@app.route('/done/<int:id>')
+def done(id):
+    taask = Task.query.get_or_404(id)   
+    taask.status = "completed"
+    db.session.commit()
+    return redirect('/')
+@app.route('/getreport')
+def getreport():
+    tasks = Task.query.order_by(Task.time1).all()
+    return render_template('getrep.html',tasks=tasks)
 
-def open_browser():
-      webbrowser.open_new('http://127.0.0.1:5000/')
 
+#def open_browser():
+#      webbrowser.open_new('http://127.0.0.1:5000/')
+
+#if __name__ == "__main__":
+#      Timer(1, open_browser).start();
 if __name__ == "__main__":
-      Timer(1, open_browser).start();
-      app.run(debug=True)
+    app.run()

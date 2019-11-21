@@ -4,8 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Tasker</title>
     <style>
+        table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
         .button {
           background-color: #4CAF50;
           border: none;
@@ -22,26 +37,40 @@
 </head>
 <body>
     <div>
+    </br>
+  </br>
+</br>
         <form action="/" method="POST" align="center" >
 
-            <input type="text" name="task" id = "task" >
-            <button type="submit" class="button"> Submit</button>
-
-            <input type="time" name="time" id="time">
+            <input type="text" name="task" id = "task" ></br></br>
+            <input type="time" name="time1" id="time1">
+            <input type="time" name="time2" id="time2"></br></br>
+            <button type="submit" class="button"> Submit</button></br></br>
         </form>
+        
+        <form  action="/getreport"align="center">
+
+          <button  class="button" onclick="getreport()"> Get Report</button></br></br>
+      </form>
+        
         <table border="1" align="center">
                 <tr>
                   <th>Task</th>
-                  <th>Time</th>
+                  <th>Time1</th>
+                  <th>Time2</th>
                   <th>Option</th>
                 </tr>
                 {% for task in tasks %}
                 <tr>
                   <td>{{task.task}}</td>
-                  <td>{{task.time}}</td>
+                  <td>{{task.time1}}</td>
+                  <td>{{task.time2}}</td>
+                  <td>{{task.status}}</td>
+
                   <td><a href = "/delete/{{task.id}}">Delete</a>
                       
                     <a href = "/update/{{task.id}}">Update</a>
+                    <a href = "/done/{{task.id}}">Done</a>
                 </td>
                 </tr>
                 {% endfor %}
