@@ -11,6 +11,7 @@ import datetime
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///read.db'
 db = SQLAlchemy(app)
 
+
 class Task(db.Model):
 
     id = db.Column(db.Integer, primary_key = True)
@@ -24,19 +25,14 @@ class Task(db.Model):
 
 @app.route('/',methods = ['POST','GET'])
 def index():
+    flag = 0
     if request.method == 'POST':
         new_task1 = request.form.get('task')
         time1 = request.form.get('time1')
         time2 = request.form.get('time2')
         tasks = Task.query.order_by(Task.time1).all()
-        flag = 0
-        if new_task1!="" and time1!="" and time2!="":
-            for task in tasks:
-                if time1==task.time1 and time2==task.time2:
-                    flag = 1
-        else:
-            print("Enter all the parameters")
-        if flag == 0:
+        if tasks==[] and new_task1!="" and time1!="" and time2!="":
+            flag=1
             try:
                 t =Task(task=new_task1, time1 = time1,time2= time2 )              
                 db.session.add(t)
@@ -44,6 +40,22 @@ def index():
             except:
                 return "There was a problem"
             return redirect('/')
+            #for task in tasks:
+            #    if time1==task.time1 and time2==task.time2:
+            #        flag = 1
+        elif tasks != [] and new_task1!="" and time1!="" and time2!="":
+            flag2=0
+            for task in tasks:
+                if time1==task.time1 and time2==task.time2:
+                    flag2=1
+            if flag2==0:
+                    try:
+                        t =Task(task=new_task1, time1 = time1,time2= time2 )              
+                        db.session.add(t)
+                        db.session.commit()
+                    except:
+                        return "There was a problem"
+                    return redirect('/')
 
 
     tasks = Task.query.order_by(Task.time1).all()
@@ -93,4 +105,4 @@ def getreport():
 #if __name__ == "__main__":
 #      Timer(1, open_browser).start();
 if __name__ == "__main__":
-    app.run()
+    app.run(debug="True")

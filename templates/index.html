@@ -33,6 +33,29 @@
           margin: 4px 2px;
           cursor: pointer;
         }
+        .button[type=submit]:hover {
+        background-color: #45a049;
+        }
+        input[type=text], select {
+        width: 50%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 2px solid #000000;
+        border-radius: 4px;
+        box-sizing: border-box;
+        }
+        input[type=time], select {
+        width: 10%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 2px solid #000000;
+        border-radius: 4px;
+        box-sizing: border-box;
+        }
+
+
         </style>
 </head>
 <body>
@@ -40,17 +63,18 @@
     </br>
   </br>
 </br>
+<h1 align="center">TASKER</h1>
         <form action="/" method="POST" align="center" >
 
             <input type="text" name="task" id = "task" ></br></br>
-            <input type="time" name="time1" id="time1">
+            <input type="time" name="time1" id="time1" font-size="5">
             <input type="time" name="time2" id="time2"></br></br>
             <button type="submit" class="button"> Submit</button></br></br>
         </form>
         
         <form  action="/getreport"align="center">
 
-          <button  class="button" onclick="getreport()"> Get Report</button></br></br>
+          <button  type="submit" class="button" onclick="getreport()"> Get Report</button></br></br>
       </form>
         
         <table border="1" align="center">
@@ -76,6 +100,7 @@
                 {% endfor %}
         </table>
     </div>
+ 
     
 </body>
 </html>
