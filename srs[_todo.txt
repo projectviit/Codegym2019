@@ -1,0 +1,32 @@
+
+						Software Requirements specification
+						For 'TO DO List'
+
+
+Requirements Analysis:
+
+	The purpose of this document is to build a system that would:
+		1. Allow the user to create a list of tasks he/she plans to perform at the desired time.
+		2. Produce 'alert notificatios' at the time the task is due.
+		3. Create a report of all the tasks performed through out the day, week or month as required.
+
+Functional specification
+
+	1. The system will store the tasks entered by the user.
+	2. It will set a timer and give alert notification of the tast at the specified time.
+	3. It will ask the user to assign priorities to the tasks. 
+	4. When there are more than one task at the same time, it will be alerted as  per their priority.
+	5. It will prepare a record of tasks entered and thier details.
+	6. It will allow the user to edit as well as delete a task when required.
+
+External Interface Specification
+
+	1. User Interface - HTML 
+	2. Hardware - Windows. A browser which supports CGI, HTML & Javascript.
+
+
+Technical specification
+
+	1. Memory constraints - The system would retain the history of the task assigned and completed throught the week for the next one month and will be deleted after the completion of one month.
+	2. The system will be a desktop program in its first verion and may be changed to a mobile application in future scope                    
+	3. The system will be available for 100 users.
