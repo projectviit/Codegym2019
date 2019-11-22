@@ -11,13 +11,11 @@
         border-collapse: collapse;
         width: 100%;
       }
-
       td, th {
         border: 1px solid #dddddd;
         text-align: left;
         padding: 8px;
       }
-
       tr:nth-child(even) {
         background-color: #dddddd;
       }
@@ -54,34 +52,31 @@
         border-radius: 4px;
         box-sizing: border-box;
         }
-
-
         </style>
 </head>
 <body>
     <div>
     </br>
-  </br>
 </br>
 <h1 align="center">TASKER</h1>
         <form action="/" method="POST" align="center" >
 
-            <input type="text" name="task" id = "task" ></br></br>
+            <p><b>Task  :</b> <input type="text" name="task" id = "task" ></br></br> </p>
+            From:
             <input type="time" name="time1" id="time1" font-size="5">
+            To:
             <input type="time" name="time2" id="time2"></br></br>
-            <button type="submit" class="button"> Submit</button></br></br>
-        </form>
-        
-        <form  action="/getreport"align="center">
+            <button type="submit" class="button"> Submit</button>
 
           <button  type="submit" class="button" onclick="getreport()"> Get Report</button></br></br>
       </form>
-        
+
         <table border="1" align="center">
                 <tr>
-                  <th>Task</th>
-                  <th>Time1</th>
-                  <th>Time2</th>
+                  <th>Tasks</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Status</th>
                   <th>Option</th>
                 </tr>
                 {% for task in tasks %}
@@ -92,7 +87,7 @@
                   <td>{{task.status}}</td>
 
                   <td><a href = "/delete/{{task.id}}">Delete</a>
-                      
+
                     <a href = "/update/{{task.id}}">Update</a>
                     <a href = "/done/{{task.id}}">Done</a>
                 </td>
@@ -100,7 +95,7 @@
                 {% endfor %}
         </table>
     </div>
- 
-    
+
+
 </body>
-</html>
+</html> 

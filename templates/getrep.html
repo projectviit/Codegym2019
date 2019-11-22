@@ -11,13 +11,11 @@
         border-collapse: collapse;
         width: 100%;
       }
-
       td, th {
         border: 1px solid #dddddd;
         text-align: left;
         padding: 8px;
       }
-
       tr:nth-child(even) {
         background-color: #dddddd;
       }
@@ -41,13 +39,14 @@
   </br>
 </br>
 <h1 align="center">REPORT</h1>
-      
+
 <table border="1" align="center">
                 <tr>
                   <th>Task</th>
                   <th>Time1</th>
                   <th>Time2</th>
-                  <th>Option</th>
+                  <th>Status</th>
+
                 </tr>
                 {% for task in tasks %}
                 <tr>
@@ -59,6 +58,6 @@
                 {% endfor %}
         </table>
     </div>
-    
+
 </body>
-</html>
+</html> 

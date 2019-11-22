@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request,redirect
-from flaskwebgui import FlaskUI
 from flask_sqlalchemy import SQLAlchemy
+#from flaskwebgui import FlaskUI
+import threading 
+import time
+from win10toast import ToastNotifier
 #import webbrowser
 #from threading import Timer
 
@@ -18,7 +21,7 @@ class Task(db.Model):
     task = db.Column(db.String(), nullable=False,default="")
     time1 = db.Column( db.String(), nullable = False)
     time2 = db.Column( db.String(), nullable = False)
-    status = db.Column( db.String(), nullable=False, default="uncompleted")
+    status = db.Column( db.String(), nullable=False, default="incomplete")
 
     def __repr__(self):
         return("Hello")
@@ -77,14 +80,16 @@ def update(id):
         taask.time1 = request.form['time1']
         taask.time2= request.form['time2']
         for task in tasks:
-            if taask.time1!=task.time1 and taask.time2!=task.time2:
+            if taask.time1 not in task.time1 and taask.time2 not in task.time2:
+
                 try:
                     db.session.commit()
                     return redirect('/')  
                 except:
                     return "there was a problem" 
-            else:
-                return redirect('/')  
+            #else:
+            #    return redirect('/')  
+
     else:
         return render_template('update.html',task=taask)
 @app.route('/done/<int:id>')
@@ -99,10 +104,23 @@ def getreport():
     return render_template('getrep.html',tasks=tasks)
 
 
-#def open_browser():
-#      webbrowser.open_new('http://127.0.0.1:5000/')
+def notification_scheduler():
+    toast = ToastNotifier()
+    import datetime
+    while True:
+        tasks = Task.query.all()
+        for task in tasks: 
+            now = datetime.datetime.now()
+            current_time = now.strftime("%H:%M:%S")
+            if task.time1 in current_time:
+                toast.show_toast(title=f"{task.task}", msg=f"{task.task}")
+                time.sleep(30)
+                #print(current_time)
+            print(current_time)
+            time.sleep(1)
 
-#if __name__ == "__main__":
-#      Timer(1, open_browser).start();
+
 if __name__ == "__main__":
-    app.run(debug="True")
+    x = threading.Thread(target=notification_scheduler , args=(),daemon=True)
+    x.start()
+    app.run(debug=True,)
