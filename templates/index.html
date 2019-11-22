@@ -60,12 +60,11 @@
 </head>
 <body>
     <div>
-    </br>
-</br>
+
 <h1 align="center">TASKER</h1>
         <form action="/" method="POST" align="center" >
           
-            <p><b>Task  :</b> <input type="text" name="task" id = "task" ></br></br> </p>
+            <p><b>Task  :</b> <input type="text" name="task" id = "task" ></br></p>
             From:
             <input type="time" name="time1" id="time1" font-size="5">
             To:
@@ -85,18 +84,19 @@
                   <th>Option</th>
                 </tr>
                 {% for task in tasks %}
+                {% if task.is_deleted == 'no' %}
                 <tr>
                   <td>{{task.task}}</td>
                   <td>{{task.time1}}</td>
                   <td>{{task.time2}}</td>
                   <td>{{task.status}}</td>
-
+                  
                   <td><a href = "/delete/{{task.id}}">Delete</a>
                       
                     <a href = "/update/{{task.id}}">Update</a>
                     <a href = "/done/{{task.id}}">Done</a>
                 </td>
-                </tr>
+                {% endif %}
                 {% endfor %}
         </table>
     </div>
