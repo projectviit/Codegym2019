@@ -11,11 +11,13 @@
         border-collapse: collapse;
         width: 100%;
       }
+
       td, th {
         border: 1px solid #dddddd;
         text-align: left;
         padding: 8px;
       }
+
       tr:nth-child(even) {
         background-color: #dddddd;
       }
@@ -52,6 +54,8 @@
         border-radius: 4px;
         box-sizing: border-box;
         }
+
+
         </style>
 </head>
 <body>
@@ -60,17 +64,18 @@
 </br>
 <h1 align="center">TASKER</h1>
         <form action="/" method="POST" align="center" >
-
+          
             <p><b>Task  :</b> <input type="text" name="task" id = "task" ></br></br> </p>
             From:
             <input type="time" name="time1" id="time1" font-size="5">
             To:
             <input type="time" name="time2" id="time2"></br></br>
             <button type="submit" class="button"> Submit</button>
-
+        </form>
+        <form action="/getreport" align="center">
           <button  type="submit" class="button" onclick="getreport()"> Get Report</button></br></br>
       </form>
-
+        
         <table border="1" align="center">
                 <tr>
                   <th>Tasks</th>
@@ -87,7 +92,7 @@
                   <td>{{task.status}}</td>
 
                   <td><a href = "/delete/{{task.id}}">Delete</a>
-
+                      
                     <a href = "/update/{{task.id}}">Update</a>
                     <a href = "/done/{{task.id}}">Done</a>
                 </td>
@@ -95,7 +100,7 @@
                 {% endfor %}
         </table>
     </div>
-
-
+ 
+    
 </body>
-</html> 
+</html>

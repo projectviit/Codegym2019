@@ -5,7 +5,7 @@ import threading
 import time
 from win10toast import ToastNotifier
 #import webbrowser
-#from threading import Timer
+from threading import Timer
 
 app = Flask(__name__)
 #ui=FlaskUI(app)
@@ -13,7 +13,7 @@ import datetime
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///read.db'
 db = SQLAlchemy(app)
-
+toast = ToastNotifier()
 
 class Task(db.Model):
 
@@ -35,17 +35,16 @@ def index():
         time2 = request.form.get('time2')
         tasks = Task.query.order_by(Task.time1).all()
         if tasks==[] and new_task1!="" and time1!="" and time2!="":
-            flag=1
+            
             try:
                 t =Task(task=new_task1, time1 = time1,time2= time2 )              
                 db.session.add(t)
                 db.session.commit()
+                #toast.show_toast(title=f"{t.task}", msg=f"{t.task}",threaded=True)
             except:
                 return "There was a problem"
             return redirect('/')
-            #for task in tasks:
-            #    if time1==task.time1 and time2==task.time2:
-            #        flag = 1
+
         elif tasks != [] and new_task1!="" and time1!="" and time2!="":
             flag2=0
             for task in tasks:
@@ -56,6 +55,7 @@ def index():
                         t =Task(task=new_task1, time1 = time1,time2= time2 )              
                         db.session.add(t)
                         db.session.commit()
+                        #toast.show_toast(title=f"{t.task}", msg=f"{t.task}",threaded=True)
                     except:
                         return "There was a problem"
                     return redirect('/')
@@ -76,19 +76,24 @@ def update(id):
     taask = Task.query.get_or_404(id)    
     tasks = Task.query.order_by(Task.time1).all()
     if request.method == 'POST':
-        taask.task = request.form['task']
-        taask.time1 = request.form['time1']
-        taask.time2= request.form['time2']
+        t= request.form.get('task')
+        time_1 = request.form.get('time1')
+        time_2 = request.form.get('time2')
+        flag = 1
         for task in tasks:
-            if taask.time1 not in task.time1 and taask.time2 not in task.time2:
-
-                try:
-                    db.session.commit()
-                    return redirect('/')  
-                except:
-                    return "there was a problem" 
-            #else:
-            #    return redirect('/')  
+            if time_1 == task.time1 :
+                flag = 0
+        if flag :
+            try:
+                taask.time1 = time_1
+                taask.time2=  time_2
+                taask.task  = t
+                db.session.commit()
+                return redirect('/')  
+            except:
+                return "there was a problem"
+        else:
+            return redirect('/') 
 
     else:
         return render_template('update.html',task=taask)
@@ -108,15 +113,14 @@ def notification_scheduler():
     toast = ToastNotifier()
     import datetime
     while True:
-        tasks = Task.query.all()
+        tasks = Task.query.order_by(Task.time1).all()
         for task in tasks: 
             now = datetime.datetime.now()
             current_time = now.strftime("%H:%M:%S")
             if task.time1 in current_time:
-                toast.show_toast(title=f"{task.task}", msg=f"{task.task}")
+                toast.show_toast(title=f"{task.task}", msg=f"{task.task}",threaded=True)
                 time.sleep(30)
-                #print(current_time)
-            print(current_time)
+                print(current_time)
             time.sleep(1)
 
 
