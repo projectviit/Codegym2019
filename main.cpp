@@ -6,7 +6,7 @@
 using namespace std;
 typedef struct task
 {
-    char task[50][30];
+    char task_name[50][30];
     char min[50][3],hour[50][4],date[50][2],month[50][2],year[50][2];
     struct task *next;
 }*node;
@@ -15,27 +15,34 @@ class reg
     int que;
 char name[20],username[15],password[15],gmail[30],phone[10],ans[20];
 public:
-static int task_num;
+ int task_num=0;
 void add_details();
+void incr_task();
 friend void forgot();
 friend int login();
 friend int search(char user1[15]);
 friend int search1(char u1[15],char p1[15]);
 friend void add_task(node x);
 };
-int reg::task_num=0;
-const int size = 30;
+
+const int size = 50;
 static reg s[size];
 
 static int  n=1;
-static node first[20];
+static node first[50];
+void reg:: incr_task()
+{
+     int *p;
+     p=&task_num;
+     ++*p;
+}
 void add_task(node x,int n1)
 {
   int k;
 k=s[n1].task_num;
-cout<<"\n "<<n<<"\t"<<k;
+
 cout<<"\n Enter the task ";
-cin.getline(x->task[k],30);
+cin>>x->task_name[k];
 cout<<"\n Enter the date";
 
 cin>>x->date[k];
@@ -59,9 +66,9 @@ void create_task(int n1,int tnum)
   {
      first[n1] = new (struct task);
      add_task(first[n1],n1);
-     ++s[n].task_num;
-     cout<<s[n].task_num;
+
      first[n1]->next=nullptr;
+     s[n1].incr_task();
 
   }
   else
@@ -76,12 +83,60 @@ void create_task(int n1,int tnum)
       a->next= new(struct task);
       a=a->next;
       add_task(a,n1);
-      ++s[n].task_num;
+      s[n1].incr_task();
       --tnum;
     }
   }
 }
+void show_task(int n)
+{
+    cout<<"\n Your tasks are";
+    cout<<"\n task name \t date/month/year \t hour:min";
+     node a;
+    int i=0;
+    a=first[n];
+    while(a!=nullptr)
+    {
+        cout<<"\n"<<a->task_name[i]<<"\t"<<a->date[i]<<"/"<<a->month[i]<<"/"<<a->year[i]<<"\t"<<a->hour[i]<<":"<<a->min[i];
+        a=a->next;
+        ++i;
 
+    }
+}
+void delete_task(int n)
+{
+     int num;
+    cout<<"\n Enter the task number you want to delete";
+    cin>>num;
+
+    node a,b;
+    a=first[n];
+     if(num==1 && s[n].task_num==1)
+      {
+         delete a;
+
+      }
+     if(num ==1 && s[n].task_num!=1)
+      {
+         b=a;
+         a=a->next;
+         delete b;
+         first[n]=a;
+
+
+     }
+   else
+   {
+    while(num>1)
+    {
+       b=a;
+       a=a->next;
+
+     }
+    b->next=a->next;
+    delete a;
+   }
+}
 int  search(char user1[15])
 {
 int i,count=0;
@@ -241,16 +296,17 @@ void task_selection(int n1)
 {
   int x,tnum;
   char ans1;
-  cout<<"\n Press 1 : To add task  \n Press 2 : To read task \n Press  3 : To delete task\n Press 4 : To update task \n Press  5 : To generate report";
-cin>>x;
+
 do
 {
+    cout<<"\n Press 1 : To add task  \n Press 2 : To read task \n Press  3 : To delete task";
+  cin>>x;
 switch(x)
 {
    case 1 :cout<<"\n Enter the number of task you want to add";
                  cin>>tnum;
 
-           if(tnum>1 && s[n1].task_num==1)
+           if(tnum>1 && s[n1].task_num==0)
            {
               create_task(n1,1);
               create_task(n1,tnum-1);
@@ -260,6 +316,10 @@ switch(x)
                create_task(n1,tnum);
            }
            break;
+     case 2 :show_task(n1);
+             break;
+     case 3 :delete_task(n1);
+             break;
     default :cout<<"\n Wrong input given";
   }
 cout<<"Do you want to continue(y/n)?";
