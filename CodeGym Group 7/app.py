@@ -9,18 +9,17 @@ import update
 import database
 
 app = Flask(__name__)
-#ui=FlaskUI(app)
-
 #creating the database
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///read.db' 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-
-
 db = SQLAlchemy(app)
 
 #the first page that you'll land to once you run the server
+#it contains the provisions for adding a task, deleting a task, updating a task and you can see the list of your tasks
+#on the same page
+
 @app.route('/',methods = ['POST','GET'])
 def home():
     if request.method == 'POST':
@@ -33,14 +32,12 @@ def home():
 
 
 #the delete module which deletes a particular task from your list of tasks
-
 @app.route('/delete/<int:id>')
 def delete(id):
     database.Task().delete(id = id)
     return redirect('/')
 
 #the update module which lets you update your existing task with a new task
-
 @app.route('/update/<int:id>', methods = ['POST','GET'])
 def change(id):    
     task = database.Task.query.get_or_404(id)
@@ -53,14 +50,13 @@ def change(id):
         return render_template('update.html',task=task)
 
 #the done module which marks the task as completed   
-
 @app.route('/done/<int:id>')
 def done(id):
     database.Task().done(id)
     return redirect('/')
 
 #module for report generation of your task list.
-
+#this would ask the user to enter their email credentials, and their report will be mailed to that email address.
 @app.route('/getreport', methods=['GET','POST'])
 def getreport():
     tasks = database.Task.query.all()
@@ -70,7 +66,6 @@ def getreport():
     return render_template('getrep.html', tasks = tasks)
 
 #module to delete all tasks in the list
-
 @app.route('/removeall')
 def removeall():
     database.Task().removeall()
@@ -80,5 +75,4 @@ def removeall():
 if __name__ == "__main__":
     x = threading.Thread(target=notification.scheduler().notification_scheduler , args=(),daemon=True)
     x.start()
-    #ui.run()
     app.run(debug=True,)
