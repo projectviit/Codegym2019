@@ -7,7 +7,7 @@ Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.4.1
 flaskwebgui==0.0.8
 itsdangerous==1.1.0
-Jinja2==2.10.3
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 psutil==5.6.6
 PyJWT==1.4.2
